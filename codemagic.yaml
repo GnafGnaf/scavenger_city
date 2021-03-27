@@ -9,8 +9,14 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
     scripts:
-      - flutter emulators --launch apple_ios_simulator
       - |
         # set up debug keystore
         rm -f ~/.android/debug.keystore
@@ -28,7 +34,6 @@ workflows:
         echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
       - cd . && flutter packages pub get
       - cd . && flutter analyze
-      - cd . && flutter drive --target=test_driver/main.dart
       - cd . && flutter test
       - cd . && flutter build apk --debug
       - find . -name "Podfile" -execdir pod install \;
